@@ -643,15 +643,15 @@ ALTER TABLE device_tokens ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view own profile"
   ON profiles FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 CREATE POLICY "Users can insert own profile"
   ON profiles FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 -- ─── ROLES ────────────────────────────────────────────────────
 
@@ -663,7 +663,7 @@ CREATE POLICY "Anyone can view roles"
 
 CREATE POLICY "Users can view own roles"
   ON user_roles FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 CREATE POLICY "Admins can manage roles"
   ON user_roles FOR ALL
@@ -679,8 +679,8 @@ CREATE POLICY "Admins can manage roles"
 
 CREATE POLICY "Users manage own addresses"
   ON addresses FOR ALL
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 -- ─── MERCHANTS ────────────────────────────────────────────────
 
@@ -701,7 +701,7 @@ CREATE POLICY "Merchant owners insert"
 CREATE POLICY "Merchant staff can view"
   ON merchant_staff FOR SELECT
   USING (
-    auth.uid() = user_id OR
+    auth.uid()::text = user_id OR
     merchant_id IN (SELECT merchant_id FROM merchant_staff WHERE user_id = auth.uid())
   );
 
@@ -763,18 +763,18 @@ CREATE POLICY "Merchant staff manage images"
 CREATE POLICY "Users view own orders"
   ON orders FOR SELECT
   USING (
-    auth.uid() = user_id OR
+    auth.uid()::text = user_id OR
     auth.uid() = driver_id OR
     merchant_id IN (SELECT merchant_id FROM merchant_staff WHERE user_id = auth.uid())
   );
 
 CREATE POLICY "Users insert own orders"
   ON orders FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 CREATE POLICY "Users update own orders"
   ON orders FOR UPDATE
-  USING (auth.uid() = user_id OR auth.uid() = driver_id);
+  USING (auth.uid()::text = user_id OR auth.uid() = driver_id);
 
 CREATE POLICY "Merchant staff update orders"
   ON orders FOR UPDATE
@@ -808,7 +808,7 @@ CREATE POLICY "Anyone can view drivers"
 
 CREATE POLICY "Drivers update own profile"
   ON drivers FOR UPDATE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 -- ─── DRIVER LOCATIONS ────────────────────────────────────────
 
@@ -842,8 +842,8 @@ CREATE POLICY "Users view jobs for own orders"
 
 CREATE POLICY "Users manage own ride requests"
   ON ride_requests FOR ALL
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 CREATE POLICY "Drivers view available rides"
   ON ride_requests FOR SELECT
@@ -862,8 +862,8 @@ CREATE POLICY "Drivers accept ride requests"
 
 CREATE POLICY "Users manage own parcel requests"
   ON parcel_requests FOR ALL
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 CREATE POLICY "Drivers view and update parcel requests"
   ON parcel_requests FOR SELECT
@@ -875,25 +875,25 @@ CREATE POLICY "Drivers view and update parcel requests"
 
 CREATE POLICY "Users view own payments"
   ON payments FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 CREATE POLICY "Users insert own payments"
   ON payments FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 -- ─── NOTIFICATIONS ───────────────────────────────────────────
 
 CREATE POLICY "Users manage own notifications"
   ON notifications FOR ALL
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 -- ─── DEVICE TOKENS ───────────────────────────────────────────
 
 CREATE POLICY "Users manage own device tokens"
   ON device_tokens FOR ALL
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
 
 -- =============================================================
 -- STORAGE BUCKETS
